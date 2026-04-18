@@ -5,11 +5,11 @@ import useComplaintStore from '../store/complaintStore';
 import './Profile.css';
 
 const SETTINGS = [
-  { icon: 'fa-bell', label: 'Notifications', desc: 'Manage push notifications' },
-  { icon: 'fa-language', label: 'Language', desc: 'English (Phase 1)' },
-  { icon: 'fa-shield-halved', label: 'Privacy', desc: 'Data & privacy settings' },
-  { icon: 'fa-circle-question', label: 'Help & Support', desc: 'FAQs, contact support' },
-  { icon: 'fa-info-circle', label: 'About NIGRANI', desc: 'Version 1.0.0' },
+  { icon: 'fa-bell', label: 'Notifications', desc: 'Manage push notifications', path: '/settings/notifications' },
+  { icon: 'fa-language', label: 'Language', desc: 'English (Phase 1)', path: '/settings/language' },
+  { icon: 'fa-shield-halved', label: 'Privacy', desc: 'Data & privacy settings', path: '/settings/privacy' },
+  { icon: 'fa-circle-question', label: 'Help & Support', desc: 'FAQs, contact support', path: '/settings/help' },
+  { icon: 'fa-info-circle', label: 'About NIGRANI', desc: 'Version 1.0.0', path: '/settings/about' },
 ];
 
 export default function Profile() {
@@ -31,6 +31,10 @@ export default function Profile() {
     navigate('/auth', { replace: true });
   };
 
+  const goToReports = (status) => {
+    navigate('/complaints', { state: { status } });
+  };
+
   return (
     <div className="profile">
       {/* Profile Header */}
@@ -43,7 +47,7 @@ export default function Profile() {
           <p><i className="fas fa-phone" /> {user?.phone || '+91 98765 43210'}</p>
           <p><i className="fas fa-map-pin" /> {user?.ward || 'Ward 15 — Kothrud'}</p>
         </div>
-        <button className="btn btn-outline btn-sm">
+        <button className="btn btn-outline btn-sm" onClick={() => navigate('/edit-profile')}>
           <i className="fas fa-pen" /> Edit
         </button>
       </div>
@@ -52,15 +56,15 @@ export default function Profile() {
       <div className="profile__activity">
         <h3>My Activity</h3>
         <div className="profile__activity-grid">
-          <div className="profile__activity-item">
+          <div className="profile__activity-item" onClick={() => goToReports('all')}>
             <span className="profile__activity-value">{stats.total}</span>
             <span className="profile__activity-label">Total Reports</span>
           </div>
-          <div className="profile__activity-item profile__activity-item--success">
+          <div className="profile__activity-item profile__activity-item--success" onClick={() => goToReports('resolved')}>
             <span className="profile__activity-value">{stats.resolved}</span>
             <span className="profile__activity-label">Resolved</span>
           </div>
-          <div className="profile__activity-item profile__activity-item--warning">
+          <div className="profile__activity-item profile__activity-item--warning" onClick={() => goToReports('in_progress')}>
             <span className="profile__activity-value">{stats.pending + stats.inProgress}</span>
             <span className="profile__activity-label">Active</span>
           </div>
@@ -72,7 +76,7 @@ export default function Profile() {
         <h3>Settings</h3>
         <div className="profile__settings-list">
           {SETTINGS.map((item, i) => (
-            <button key={i} className="profile__settings-item">
+            <button key={i} className="profile__settings-item" onClick={() => navigate(item.path)}>
               <div className="profile__settings-icon">
                 <i className={`fas ${item.icon}`} />
               </div>
