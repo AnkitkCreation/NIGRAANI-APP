@@ -1,0 +1,101 @@
+.complaint-card {
+  display: flex;
+  gap: var(--space-md);
+  background: var(--white);
+  border-radius: var(--card-radius);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  animation: fadeInUp 0.3s ease both;
+}
+.complaint-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-100);
+}
+.complaint-card__thumb {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+.complaint-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.complaint-card__category-chip {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.complaint-card__category-chip i { font-size: 8px; }
+.complaint-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.complaint-card__title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--gray-900);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.complaint-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin: 4px 0;
+}
+.complaint-card__location {
+  font-size: 11px;
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.complaint-card__location i { color: var(--primary); font-size: 10px; }
+.complaint-card__time {
+  font-size: 10px;
+  color: var(--gray-500);
+}
+.complaint-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Compact variant */
+.complaint-card--compact {
+  padding: var(--space-sm);
+}
+.complaint-card--compact .complaint-card__thumb {
+  width: 64px;
+  height: 64px;
+}
+.complaint-card--compact .complaint-card__title {
+  font-size: 12px;
+  -webkit-line-clamp: 1;
+}

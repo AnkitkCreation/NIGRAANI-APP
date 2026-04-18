@@ -1,0 +1,191 @@
+.profile {
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  animation: fadeIn 0.3s ease;
+}
+
+/* Header */
+.profile__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  border-radius: var(--card-radius);
+  padding: var(--space-xl);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.profile__header::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.profile__avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+.profile__info { flex: 1; min-width: 0; }
+.profile__info h2 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+}
+.profile__info p {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+.profile__info p i { font-size: 10px; }
+.profile__header .btn-outline {
+  border-color: rgba(255,255,255,0.4);
+  color: white;
+  flex-shrink: 0;
+}
+.profile__header .btn-outline:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Activity */
+.profile__activity {
+  margin-top: var(--space-xl);
+}
+.profile__activity h3,
+.profile__settings h3 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--space-md);
+}
+.profile__activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+.profile__activity-item {
+  background: var(--white);
+  border-radius: var(--card-radius);
+  padding: var(--space-lg) var(--space-sm);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-base);
+}
+.profile__activity-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.profile__activity-value {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--primary);
+  display: block;
+}
+.profile__activity-item--success .profile__activity-value { color: var(--success); }
+.profile__activity-item--warning .profile__activity-value { color: var(--warning); }
+.profile__activity-label {
+  font-size: 11px;
+  color: var(--gray-600);
+  margin-top: 2px;
+  display: block;
+}
+
+/* Settings */
+.profile__settings {
+  margin-top: var(--space-xl);
+}
+.profile__settings-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+.profile__settings-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--gray-100);
+  transition: background var(--transition-fast);
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.profile__settings-item:last-child { border-bottom: none; }
+.profile__settings-item:hover { background: var(--gray-50); }
+.profile__settings-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--primary-50);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.profile__settings-text {
+  flex: 1; min-width: 0;
+}
+.profile__settings-label {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-900);
+  display: block;
+}
+.profile__settings-desc {
+  font-size: 11px;
+  color: var(--gray-500);
+  display: block;
+  margin-top: 1px;
+}
+.profile__settings-arrow {
+  color: var(--gray-400);
+  font-size: 12px;
+}
+
+/* Logout */
+.profile__logout {
+  width: 100%;
+  margin-top: var(--space-xl);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  background: var(--severity-critical-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-base);
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.profile__logout:hover {
+  background: #ffcdd2;
+  border-color: var(--danger);
+}

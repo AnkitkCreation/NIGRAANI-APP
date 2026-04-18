@@ -1,0 +1,104 @@
+.my-complaints {
+  padding: 0 var(--space-lg) var(--space-lg);
+  animation: fadeIn 0.3s ease;
+}
+
+.my-complaints__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-md);
+  height: 42px;
+  margin-top: var(--space-md);
+}
+.my-complaints__search i { color: var(--gray-500); font-size: 14px; }
+.my-complaints__search input { flex: 1; background: none; font-size: 13px; }
+.my-complaints__clear {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-500); font-size: 12px;
+  background: none; border: none; cursor: pointer;
+}
+.my-complaints__clear:hover { background: var(--gray-200); }
+
+/* Tabs */
+.my-complaints__tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: var(--space-md);
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.my-complaints__tabs::-webkit-scrollbar { display: none; }
+
+.my-complaints__tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.my-complaints__tab:hover { background: var(--gray-200); }
+.my-complaints__tab--active {
+  background: var(--primary);
+  color: white;
+}
+.my-complaints__tab-count {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+.my-complaints__tab--active .my-complaints__tab-count {
+  background: rgba(255,255,255,0.25);
+}
+
+/* List */
+.my-complaints__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+/* Empty */
+.my-complaints__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px var(--space-xl);
+  color: var(--gray-500);
+}
+.my-complaints__empty i {
+  font-size: 40px;
+  color: var(--gray-300);
+  margin-bottom: 16px;
+}
+.my-complaints__empty h3 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-700);
+}
+.my-complaints__empty p {
+  font-size: 13px;
+  margin-top: 4px;
+}
