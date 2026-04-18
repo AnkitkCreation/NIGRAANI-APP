@@ -22,7 +22,7 @@ export default function Auth() {
   const handleVerify = (e) => {
     e.preventDefault();
     if (mode === 'login') {
-      login();
+      login({ phone: `+91${phone}` });
     } else {
       register({ name, phone: `+91${phone}` });
     }

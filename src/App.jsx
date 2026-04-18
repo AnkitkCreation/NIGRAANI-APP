@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+import useAuthStore from './store/authStore';
 import Header from './components/Layout/Header';
 import BottomNav from './components/Layout/BottomNav';
 import Splash from './pages/Splash';
@@ -16,6 +18,12 @@ import SettingsDetail from './pages/SettingsDetail';
 import './App.css';
 
 export default function App() {
+  const loadUser = useAuthStore(s => s.loadUser);
+
+  useLayoutEffect(() => {
+    loadUser();
+  }, [loadUser]);
+
   return (
     <BrowserRouter>
       <div className="app-container">

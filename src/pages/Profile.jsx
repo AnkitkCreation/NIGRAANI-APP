@@ -17,7 +17,7 @@ export default function Profile() {
   const { user, logout } = useAuthStore();
   const complaints = useComplaintStore(s => s.complaints);
   const stats = useMemo(() => {
-    const userComplaints = complaints.filter(c => c.userId === 'u001');
+    const userComplaints = complaints.filter(c => c.userId === user?.id);
     return {
       total: userComplaints.length,
       pending: userComplaints.filter(c => c.status === 'pending').length,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import useComplaintStore from '../store/complaintStore';
+import useAuthStore from '../store/authStore';
 import ComplaintCard from '../components/ComplaintCard';
 import './MyComplaints.css';
 
@@ -14,6 +15,7 @@ const TABS = [
 
 export default function MyComplaints() {
   const location = useLocation();
+  const { user } = useAuthStore();
   const complaints = useComplaintStore(s => s.complaints);
   const [activeTab, setActiveTab] = useState(location.state?.status || 'all');
   const [search, setSearch] = useState('');
@@ -24,7 +26,7 @@ export default function MyComplaints() {
     }
   }, [location.state]);
 
-  const userComplaints = complaints.filter(c => c.userId === 'u001');
+  const userComplaints = complaints.filter(c => c.userId === user?.id);
 
   const filtered = userComplaints.filter(c => {
     const matchTab = activeTab === 'all' || c.status === activeTab || (activeTab === 'in_progress' && c.status === 'assigned');

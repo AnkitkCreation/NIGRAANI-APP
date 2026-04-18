@@ -13,7 +13,8 @@ const useComplaintStore = create((set, get) => ({
     return complaints.filter(c => c.status === activeFilter);
   },
 
-  getUserComplaints: (userId = 'u001') => {
+  getUserComplaints: (userId) => {
+    if (!userId) return [];
     return get().complaints.filter(c => c.userId === userId);
   },
 
@@ -21,11 +22,11 @@ const useComplaintStore = create((set, get) => ({
     return get().complaints.find(c => c.id === id);
   },
 
-  addComplaint: (complaintData) => {
+  addComplaint: (complaintData, userId) => {
     const newComplaint = {
       ...complaintData,
       id: generateComplaintId(),
-      userId: 'u001',
+      userId: userId || 'unknown',
       severityConfidence: Math.random() * 0.3 + 0.7,
       status: 'pending',
       createdAt: new Date().toISOString(),
@@ -45,9 +46,9 @@ const useComplaintStore = create((set, get) => ({
     return newComplaint.id;
   },
 
-  getStats: () => {
+  getStats: (userId) => {
     const complaints = get().complaints;
-    const userComplaints = complaints.filter(c => c.userId === 'u001');
+    const userComplaints = userId ? complaints.filter(c => c.userId === userId) : [];
     return {
       total: userComplaints.length,
       pending: userComplaints.filter(c => c.status === 'pending').length,

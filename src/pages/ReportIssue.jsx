@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useComplaintStore from '../store/complaintStore';
+import useAuthStore from '../store/authStore';
 import { CATEGORIES } from '../data/mockData';
 import StepIndicator from '../components/StepIndicator';
 import SeverityBadge from '../components/SeverityBadge';
@@ -22,6 +23,7 @@ function classifySeverity(title, description) {
 export default function ReportIssue() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuthStore();
   const addComplaint = useComplaintStore(s => s.addComplaint);
   const fileInputRef = useRef(null);
 
@@ -67,7 +69,7 @@ export default function ReportIssue() {
       ward: 'Ward 14 — Deccan',
       severity,
       landmark,
-    });
+    }, user?.id);
     setSubmittedId(id);
     setStep(4); // success
   };
@@ -234,14 +236,21 @@ export default function ReportIssue() {
             <button className="btn btn-outline" onClick={() => setStep(1)}>
               <i className="fas fa-arrow-left" /> Back
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => setStep(3)}
-              disabled={!category || !title || description.length < 20}
-              style={{ flex: 1 }}
-            >
-              Review <i className="fas fa-arrow-right" />
-            </button>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => setStep(3)}
+                disabled={!category || !title || description.length < 3}
+                style={{ width: '100%' }}
+              >
+                Review <i className="fas fa-arrow-right" />
+              </button>
+              {(!category || !title || description.length < 3) && (
+                <span className="text-caption" style={{ color: 'var(--accent)', marginTop: 4, textAlign: 'center', fontSize: 10 }}>
+                  {!category ? 'Select category' : !title ? 'Enter title' : 'Description too short'}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       )}

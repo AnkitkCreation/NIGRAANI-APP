@@ -7,7 +7,7 @@ const useAuthStore = create((set) => ({
   isFirstLaunch: !localStorage.getItem('nigrani_onboarded'),
 
   login: (userData) => {
-    const user = userData || MOCK_USER;
+    const user = userData ? { ...MOCK_USER, ...userData } : MOCK_USER;
     localStorage.setItem('nigrani_user', JSON.stringify(user));
     set({ user, isAuthenticated: true });
   },
