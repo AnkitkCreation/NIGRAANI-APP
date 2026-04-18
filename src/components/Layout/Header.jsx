@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore';
+import useAuthStore from '../../store/authStore';
 import './Header.css';
 
 const SCREEN_TITLES = {
@@ -14,7 +15,8 @@ const SCREEN_TITLES = {
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
-  const notificationCount = useAppStore(s => s.notificationCount);
+  const { user } = useAuthStore();
+  const notificationCount = useAppStore(s => s.getUnreadCount(user?.id));
 
   const hiddenPaths = ['/', '/splash', '/onboarding', '/auth'];
   if (hiddenPaths.some(p => location.pathname === p)) return null;

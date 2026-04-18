@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { MOCK_NOTIFICATIONS } from '../data/mockData';
 import useAppStore from '../store/appStore';
+import useAuthStore from '../store/authStore';
 import './Notifications.css';
 
 const ICON_MAP = {
@@ -12,19 +12,29 @@ const ICON_MAP = {
 
 export default function Notifications() {
   const navigate = useNavigate();
-  const clearNotifications = useAppStore(s => s.clearNotifications);
+  const { user } = useAuthStore();
+  const { getUserNotifications, clearNotifications } = useAppStore();
+  
+  const userNotifications = getUserNotifications(user?.id);
+  const unreadCount = userNotifications.filter(n => !n.read).length;
 
   return (
     <div className="notifications">
       <div className="notifications__header">
-        <span className="notifications__count">{MOCK_NOTIFICATIONS.filter(n => !n.read).length} new</span>
-        <button className="btn btn-ghost btn-sm" onClick={clearNotifications}>
+        <span className="notifications__count">{unreadCount} new</span>
+        <button className="btn btn-ghost btn-sm" onClick={() => clearNotifications(user?.id)}>
           Mark all read
         </button>
       </div>
 
       <div className="notifications__list">
-        {MOCK_NOTIFICATIONS.map((notif, i) => {
+        {userNotifications.length === 0 ? (
+          <div className="notifications__empty">
+            <i className="fas fa-bell-slash" />
+            <p>No notifications yet</p>
+          </div>
+        ) : (
+          userNotifications.map((notif, i) => {
           const iconInfo = ICON_MAP[notif.type] || ICON_MAP.status_update;
           return (
             <button
@@ -44,7 +54,8 @@ export default function Notifications() {
               {!notif.read && <span className="notifications__dot" />}
             </button>
           );
-        })}
+          })
+        )}
       </div>
 
       <div style={{ height: 'calc(var(--bottom-nav-height) + 16px)' }} />

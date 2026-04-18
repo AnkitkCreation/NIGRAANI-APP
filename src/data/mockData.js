@@ -370,12 +370,12 @@ export const MOCK_COMPLAINTS = [
 ];
 
 export const MOCK_NOTIFICATIONS = [
-  { id: 'n001', type: 'status_update', title: 'Complaint Updated', message: 'Your complaint NIG-2025-00847 status changed to In Progress', time: '2 hours ago', read: false, complaintId: 'NIG-2025-00847' },
-  { id: 'n002', type: 'assigned', title: 'Contractor Assigned', message: 'Patel Road Solutions assigned to your complaint NIG-2025-00847', time: '4 hours ago', read: false, complaintId: 'NIG-2025-00847' },
-  { id: 'n003', type: 'resolved', title: 'Issue Resolved! 🎉', message: 'Your complaint NIG-2025-00815 (Garbage pile) has been resolved', time: '1 day ago', read: true, complaintId: 'NIG-2025-00815' },
-  { id: 'n004', type: 'resolved', title: 'Issue Resolved! 🎉', message: 'Road cave-in near Model Colony has been fixed — NIG-2025-00762', time: '3 days ago', read: true, complaintId: 'NIG-2025-00762' },
-  { id: 'n005', type: 'status_update', title: 'Complaint Updated', message: 'Your complaint NIG-2025-00730 status changed to Resolved', time: '5 days ago', read: true, complaintId: 'NIG-2025-00730' },
-  { id: 'n006', type: 'rejected', title: 'Complaint Rejected', message: 'Your complaint NIG-2025-00665 was rejected — night-work permit valid', time: '1 week ago', read: true, complaintId: 'NIG-2025-00665' },
+  { id: 'n001', userId: 'u001', type: 'status_update', title: 'Complaint Updated', message: 'Your complaint NIG-2025-00847 status changed to In Progress', time: '2 hours ago', read: false, complaintId: 'NIG-2025-00847' },
+  { id: 'n002', userId: 'u001', type: 'assigned', title: 'Contractor Assigned', message: 'Patel Road Solutions assigned to your complaint NIG-2025-00847', time: '4 hours ago', read: false, complaintId: 'NIG-2025-00847' },
+  { id: 'n003', userId: 'u001', type: 'resolved', title: 'Issue Resolved! 🎉', message: 'Your complaint NIG-2025-00815 (Garbage pile) has been resolved', time: '1 day ago', read: true, complaintId: 'NIG-2025-00815' },
+  { id: 'n004', userId: 'u001', type: 'resolved', title: 'Issue Resolved! 🎉', message: 'Road cave-in near Model Colony has been fixed — NIG-2025-00762', time: '3 days ago', read: true, complaintId: 'NIG-2025-00762' },
+  { id: 'n005', userId: 'u001', type: 'status_update', title: 'Complaint Updated', message: 'Your complaint NIG-2025-00730 status changed to Resolved', time: '5 days ago', read: true, complaintId: 'NIG-2025-00730' },
+  { id: 'n006', userId: 'u001', type: 'rejected', title: 'Complaint Rejected', message: 'Your complaint NIG-2025-00665 was rejected — night-work permit valid', time: '1 week ago', read: true, complaintId: 'NIG-2025-00665' },
 ];
 
 export const CITY_STATS = {
