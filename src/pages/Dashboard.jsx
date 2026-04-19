@@ -42,7 +42,7 @@ export default function Dashboard() {
       <div className="dashboard__greeting">
         <div className="dashboard__greeting-text">
           <span className="dashboard__greeting-label">{greeting},</span>
-          <h2 className="dashboard__greeting-name">{user?.name || t('nav_profile')} 👋</h2>
+          <h2 className="dashboard__greeting-name">{user?.full_name || t('nav_profile')} 👋</h2>
           <p className="dashboard__greeting-subtitle">
             <i className="fas fa-city" /> {CITY_STATS.resolvedToday} {t('resolved_today')}
           </p>

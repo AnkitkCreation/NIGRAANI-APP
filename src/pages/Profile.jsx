@@ -50,7 +50,7 @@ export default function Profile() {
           <i className="fas fa-user" />
         </div>
         <div className="profile__info">
-          <h2>{user?.name || 'Citizen User'}</h2>
+          <h2>{user?.full_name || 'Citizen User'}</h2>
           <p><i className="fas fa-phone" /> {user?.phone || '+91 98765 43210'}</p>
           <p><i className="fas fa-map-pin" /> {user?.ward || 'Ward 15 — Kothrud'}</p>
         </div>

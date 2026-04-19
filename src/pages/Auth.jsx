@@ -5,29 +5,39 @@ import './Auth.css';
 
 export default function Auth() {
   const [mode, setMode] = useState('login');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [formError, setFormError] = useState(null);
+  
   const navigate = useNavigate();
-  const { login, register } = useAuthStore();
+  const { login, register, loading, error: authError } = useAuthStore();
 
-  const handleSendOtp = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (phone.length >= 10) {
-      setOtpSent(true);
+    setFormError(null);
+
+    // Validation
+    if (password.length < 6) {
+      setFormError('Password must be at least 6 characters');
+      return;
+    }
+
+    try {
+      if (mode === 'login') {
+        await login(email, password);
+      } else {
+        await register({ full_name: name, email, password, phone });
+      }
+      navigate('/home', { replace: true });
+    } catch (err) {
+      // Error is already handled in authStore, but we can catch it here if needed
+      console.error('Auth failed:', err);
     }
   };
 
-  const handleVerify = (e) => {
-    e.preventDefault();
-    if (mode === 'login') {
-      login({ phone: `+91${phone}` });
-    } else {
-      register({ name, phone: `+91${phone}` });
-    }
-    navigate('/home', { replace: true });
-  };
+  const currentError = formError || authError;
 
   return (
     <div className="auth">
@@ -48,26 +58,32 @@ export default function Auth() {
         <div className="auth__toggle">
           <button
             className={`auth__toggle-btn ${mode === 'login' ? 'auth__toggle-btn--active' : ''}`}
-            onClick={() => { setMode('login'); setOtpSent(false); }}
+            onClick={() => { setMode('login'); setFormError(null); }}
           >
             Login
           </button>
           <button
             className={`auth__toggle-btn ${mode === 'register' ? 'auth__toggle-btn--active' : ''}`}
-            onClick={() => { setMode('register'); setOtpSent(false); }}
+            onClick={() => { setMode('register'); setFormError(null); }}
           >
             Register
           </button>
         </div>
 
-        <form onSubmit={otpSent ? handleVerify : handleSendOtp} className="auth__form">
-          {mode === 'register' && !otpSent && (
+        <form onSubmit={handleSubmit} className="auth__form">
+          {currentError && (
+            <div className="auth__error animate-shake">
+              <i className="fas fa-circle-exclamation" /> {currentError}
+            </div>
+          )}
+
+          {mode === 'register' && (
             <div className="form-group">
               <label className="form-label">Full Name</label>
               <input
                 className="form-input"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Ex: Ankit Kumar"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 required
@@ -76,70 +92,53 @@ export default function Auth() {
           )}
 
           <div className="form-group">
-            <label className="form-label">Phone Number</label>
-            <div className="auth__phone-input">
-              <span className="auth__country-code">+91</span>
+            <label className="form-label">Email Address</label>
+            <input
+              className="form-input"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          {mode === 'register' && (
+            <div className="form-group">
+              <label className="form-label">Phone Number</label>
               <input
                 className="form-input"
                 type="tel"
-                placeholder="Enter 10-digit mobile number"
+                placeholder="10-digit number"
                 value={phone}
                 onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                required
-                disabled={otpSent}
               />
             </div>
-          </div>
-
-          {otpSent && (
-            <div className="form-group animate-fade-in-up">
-              <label className="form-label">OTP Verification</label>
-              <div className="auth__otp-row">
-                {[0, 1, 2, 3, 4, 5].map(i => (
-                  <input
-                    key={i}
-                    className="auth__otp-digit"
-                    type="text"
-                    maxLength="1"
-                    value={otp[i] || ''}
-                    onChange={e => {
-                      const val = e.target.value.replace(/\D/g, '');
-                      const newOtp = otp.split('');
-                      newOtp[i] = val;
-                      setOtp(newOtp.join(''));
-                      if (val && e.target.nextSibling) e.target.nextSibling.focus();
-                    }}
-                    onKeyDown={e => {
-                      if (e.key === 'Backspace' && !otp[i] && e.target.previousSibling) {
-                        e.target.previousSibling.focus();
-                      }
-                    }}
-                  />
-                ))}
-              </div>
-              <p className="auth__otp-hint">
-                <i className="fas fa-info-circle" /> Enter any 6 digits to verify (demo mode)
-              </p>
-            </div>
           )}
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="Minimum 6 characters"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
           <button
             type="submit"
-            className="btn btn-primary btn-full"
-            disabled={!otpSent ? phone.length < 10 : otp.length < 6}
+            className={`btn btn-primary btn-full ${loading ? 'btn--loading' : ''}`}
+            disabled={loading}
           >
-            {otpSent ? (
-              <><i className="fas fa-shield-halved" /> Verify & {mode === 'login' ? 'Login' : 'Register'}</>
+            {loading ? (
+              <><i className="fas fa-spinner fa-spin" /> Verifying...</>
             ) : (
-              <><i className="fas fa-paper-plane" /> Send OTP</>
+              <><i className={`fas ${mode === 'login' ? 'fa-sign-in-alt' : 'fa-user-plus'}`} /> {mode === 'login' ? 'Secure Login' : 'Create Account'}</>
             )}
           </button>
-
-          {otpSent && (
-            <button type="button" className="btn btn-ghost btn-full" onClick={() => setOtpSent(false)}>
-              <i className="fas fa-arrow-left" /> Change Number
-            </button>
-          )}
         </form>
 
         <p className="auth__footer-text">
@@ -149,3 +148,4 @@ export default function Auth() {
     </div>
   );
 }
+
