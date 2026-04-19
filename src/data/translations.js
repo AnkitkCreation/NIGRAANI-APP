@@ -104,6 +104,9 @@ export const TRANSLATIONS = {
     report_another: 'Report Another',
     go_home: 'Go to Home',
     skip_photo: 'Skip photo (demo)',
+    upvote: 'Me Too',
+    upvoted: 'Support Added',
+    affected_count: '{count} people affected',
   },
   hi: {
     // Navigation
@@ -210,6 +213,9 @@ export const TRANSLATIONS = {
     report_another: 'एक और रिपोर्ट करें',
     go_home: 'होम पर जाएं',
     skip_photo: 'फोटो छोड़ें (डेमो)',
+    upvote: 'मुझे भी',
+    upvoted: 'समर्थन जोड़ा गया',
+    affected_count: '{count} लोग प्रभावित',
   },
   mr: {
     // Navigation
@@ -316,5 +322,8 @@ export const TRANSLATIONS = {
     report_another: 'दुसरी तक्रार करा',
     go_home: 'होम वर जा',
     skip_photo: 'फोटो वगळा (डेमो)',
+    upvote: 'मला पण',
+    upvoted: 'पाठिंबा दिला',
+    affected_count: '{count} लोक प्रभावित',
   },
 };

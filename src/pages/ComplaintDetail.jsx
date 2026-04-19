@@ -1,17 +1,23 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
 import useComplaintStore from '../store/complaintStore';
+import useAuthStore from '../store/authStore';
+import useTranslation from '../hooks/useTranslation';
 import { getCategoryInfo, formatFullDate } from '../data/mockData';
 import PhotoCarousel from '../components/PhotoCarousel';
 import SeverityBadge from '../components/SeverityBadge';
 import StatusBadge from '../components/StatusBadge';
 import Timeline from '../components/Timeline';
 import './ComplaintDetail.css';
+import '../components/UpvoteButton.css';
 
 export default function ComplaintDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const complaint = useComplaintStore(s => s.getComplaintById(id));
+  const { user } = useAuthStore();
+  const { t } = useTranslation();
+  const toggleUpvote = useComplaintStore(s => s.toggleUpvote);
 
   if (!complaint) {
     return (
@@ -29,6 +35,8 @@ export default function ComplaintDetail() {
   const category = getCategoryInfo(complaint.category);
   const timelineReversed = [...complaint.timeline].reverse();
   const SEVERITY_COLORS = { critical: '#C62828', high: '#E65100', medium: '#F57F17', low: '#2E7D32' };
+
+  const isUpvoted = complaint.upvotedBy?.includes(user?.id);
 
   return (
     <div className="complaint-detail">
@@ -48,7 +56,7 @@ export default function ComplaintDetail() {
           className="detail-card__category"
           style={{ background: category.color, color: 'white' }}
         >
-          <i className={`fas ${category.icon}`} /> {category.label}
+          <i className={`fas ${category.icon}`} /> {t(`cat_${complaint.category}`) || category.label}
         </span>
         <h2 className="detail-card__title">{complaint.title}</h2>
         <p className="detail-card__desc">{complaint.description}</p>
@@ -58,6 +66,18 @@ export default function ComplaintDetail() {
             <span><i className="fas fa-robot" /> AI Confidence: {(complaint.severityConfidence * 100).toFixed(0)}%</span>
           )}
         </div>
+
+        <button
+          className={`upvote-btn upvote-btn--large ${isUpvoted ? 'upvote-btn--active' : ''}`}
+          onClick={() => toggleUpvote(complaint.id, user?.id)}
+        >
+          <i className={`${isUpvoted ? 'fas' : 'far'} fa-heart`} />
+          {isUpvoted ? t('upvoted') : t('upvote')} 
+          <span className="upvote-btn__count">({complaint.upvotes || 0})</span>
+        </button>
+        <p className="text-caption" style={{ marginTop: 8, textAlign: 'center' }}>
+          {t('affected_count').replace('{count}', complaint.upvotes || 0)}
+        </p>
       </div>
 
       {/* Location Card */}

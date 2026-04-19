@@ -46,6 +46,26 @@ const useComplaintStore = create((set, get) => ({
     return newComplaint.id;
   },
 
+  toggleUpvote: (complaintId, userId) => {
+    if (!userId) return;
+    set((state) => ({
+      complaints: state.complaints.map(c => {
+        if (c.id !== complaintId) return c;
+        
+        const alreadyUpvoted = c.upvotedBy?.includes(userId);
+        const newUpvotedBy = alreadyUpvoted 
+          ? c.upvotedBy.filter(id => id !== userId)
+          : [...(c.upvotedBy || []), userId];
+        
+        return {
+          ...c,
+          upvotes: (c.upvotes || 0) + (alreadyUpvoted ? -1 : 1),
+          upvotedBy: newUpvotedBy
+        };
+      })
+    }));
+  },
+
   getStats: (userId) => {
     const complaints = get().complaints;
     const userComplaints = userId ? complaints.filter(c => c.userId === userId) : [];
