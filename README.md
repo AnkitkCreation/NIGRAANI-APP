@@ -14,6 +14,48 @@ A mobile-first React web application for reporting and tracking civic infrastruc
 | Forms | React Hook Form 7 |
 | Styling | CSS (CSS Variables) |
 
+## Vite Configuration & Plugins
+
+### Build Plugins
+
+The project uses **@vitejs/plugin-react** (v6.0.1) as the sole build plugin. This plugin:
+
+- Enables **Fast Refresh** for instant HMR during development
+- Uses **Oxc** (Rust-based compiler) for lightning-fast builds
+- Provides React 19 compatibility with automatic JSX transform
+- Includes React error overlays for faster debugging
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],  // Only plugin used
+  build: {
+    target: 'es2020',
+    minify: 'esbuild',
+    sourcemap: false,
+    cssCodeSplit: true,
+  },
+  server: { port: 5173, host: true },
+  preview: { port: 4173 },
+})
+```
+
+### Dev Dependencies (Build & Lint)
+
+| Package | Version | Purpose |
+|--------|---------|---------|
+| @eslint/js | 9.39.4 | ESLint base config |
+| @vitejs/plugin-react | 6.0.1 | React integration |
+| eslint | 9.39.4 | Code linting |
+| eslint-plugin-react-hooks | 7.0.1 | React hooks rules |
+| eslint-plugin-react-refresh | 0.5.2 | Vite refresh plugin |
+| globals | 17.4.0 | Global env variables |
+| vite | 8.0.4 | Build tool |
+| esbuild | (latest) | Minifier (auto-installed) |
+
 ## Project Structure
 
 ```
