@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { getCategoryInfo, formatDate } from '../data/mockData';
 import SeverityBadge from './SeverityBadge';
 import StatusBadge from './StatusBadge';
+import useTranslation from '../hooks/useTranslation';
 import './ComplaintCard.css';
 
 export default function ComplaintCard({ complaint, compact = false }) {
   const navigate = useNavigate();
   const category = getCategoryInfo(complaint.category);
+  const { t } = useTranslation();
 
   return (
     <div
@@ -18,7 +20,7 @@ export default function ComplaintCard({ complaint, compact = false }) {
         <img src={complaint.photos[0]} alt={complaint.title} loading="lazy" />
         <span className="complaint-card__category-chip" style={{ background: category.color }}>
           <i className={`fas ${category.icon}`} />
-          {!compact && category.label}
+          {!compact && (t(`cat_${complaint.category}`) || category.label)}
         </span>
       </div>
       <div className="complaint-card__body">

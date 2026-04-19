@@ -1,22 +1,25 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore';
 import useAuthStore from '../../store/authStore';
+import useTranslation from '../../hooks/useTranslation';
 import './Header.css';
-
-const SCREEN_TITLES = {
-  '/home': 'NIGRANI',
-  '/map': 'Map View',
-  '/report': 'Report Issue',
-  '/complaints': 'My Complaints',
-  '/profile': 'Profile',
-  '/notifications': 'Notifications',
-};
 
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const notificationCount = useAppStore(s => s.getUnreadCount(user?.id));
+
+  const SCREEN_TITLES = {
+    '/home': 'NIGRANI',
+    '/dashboard': 'NIGRANI',
+    '/map': t('nav_map'),
+    '/report': t('quick_report'),
+    '/complaints': t('nav_issues'),
+    '/profile': t('nav_profile'),
+    '/notifications': t('notifications'),
+  };
 
   const hiddenPaths = ['/', '/splash', '/onboarding', '/auth'];
   if (hiddenPaths.some(p => location.pathname === p)) return null;

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import useComplaintStore from '../store/complaintStore';
+import useTranslation from '../hooks/useTranslation';
 import { CATEGORIES, CITY_STATS } from '../data/mockData';
 import StatCard from '../components/StatCard';
 import ComplaintCard from '../components/ComplaintCard';
@@ -12,6 +13,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const user = useAuthStore(s => s.user);
   const complaints = useComplaintStore(s => s.complaints);
+  const { t } = useTranslation();
+
   const stats = useMemo(() => {
     const userComplaints = complaints.filter(c => c.userId === user?.id);
     return {
@@ -24,7 +27,8 @@ export default function Dashboard() {
   }, [complaints]);
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  const greetingKey = hour < 12 ? 'greeting_morning' : hour < 17 ? 'greeting_afternoon' : 'greeting_evening';
+  const greeting = t(greetingKey);
 
   const recentComplaints = complaints
     .filter(c => c.userId === user?.id)
@@ -38,9 +42,9 @@ export default function Dashboard() {
       <div className="dashboard__greeting">
         <div className="dashboard__greeting-text">
           <span className="dashboard__greeting-label">{greeting},</span>
-          <h2 className="dashboard__greeting-name">{user?.name || 'Citizen'} 👋</h2>
+          <h2 className="dashboard__greeting-name">{user?.name || t('nav_profile')} 👋</h2>
           <p className="dashboard__greeting-subtitle">
-            <i className="fas fa-city" /> {CITY_STATS.resolvedToday} issues resolved today in Pune
+            <i className="fas fa-city" /> {CITY_STATS.resolvedToday} {t('resolved_today')}
           </p>
         </div>
         <div className="dashboard__greeting-visual">
@@ -50,20 +54,21 @@ export default function Dashboard() {
 
       {/* Quick Stats */}
       <div className="dashboard__stats">
-        <StatCard icon="fa-file-lines" label="Your Reports" value={stats.total} color="var(--primary)" trend={12} />
-        <StatCard icon="fa-circle-check" label="Resolved" value={stats.resolved} color="var(--success)" trend={8} />
+        <StatCard icon="fa-file-lines" label={t('your_reports')} value={stats.total} color="var(--primary)" trend={12} />
+        <StatCard icon="fa-circle-check" label={t('resolved')} value={stats.resolved} color="var(--success)" trend={8} />
       </div>
 
       {/* Quick Report Categories */}
       <section className="dashboard__section">
         <div className="dashboard__section-header">
-          <h2>Quick Report</h2>
-          <span className="text-caption">Tap a category</span>
+          <h2>{t('quick_report')}</h2>
+          <span className="text-caption">{t('tap_category')}</span>
         </div>
         <div className="dashboard__categories">
           {quickCategories.map(cat => (
             <CategoryIcon
               key={cat.key}
+              catKey={cat.key}
               icon={cat.icon}
               label={cat.label}
               color={cat.color}
@@ -76,22 +81,22 @@ export default function Dashboard() {
       {/* City Overview */}
       <section className="dashboard__section">
         <div className="dashboard__section-header">
-          <h2>City Overview</h2>
+          <h2>{t('city_overview')}</h2>
         </div>
         <div className="dashboard__city-stats">
           <div className="dashboard__city-stat">
             <span className="dashboard__city-stat-value">{CITY_STATS.totalComplaints.toLocaleString()}</span>
-            <span className="dashboard__city-stat-label">Total Reports</span>
+            <span className="dashboard__city-stat-label">{t('total_reports')}</span>
           </div>
           <div className="dashboard__city-stat-divider" />
           <div className="dashboard__city-stat">
             <span className="dashboard__city-stat-value">{CITY_STATS.resolutionRate}%</span>
-            <span className="dashboard__city-stat-label">Resolution Rate</span>
+            <span className="dashboard__city-stat-label">{t('resolution_rate')}</span>
           </div>
           <div className="dashboard__city-stat-divider" />
           <div className="dashboard__city-stat">
             <span className="dashboard__city-stat-value">{CITY_STATS.avgResolutionDays}d</span>
-            <span className="dashboard__city-stat-label">Avg Resolution</span>
+            <span className="dashboard__city-stat-label">{t('avg_resolution')}</span>
           </div>
         </div>
       </section>
@@ -99,9 +104,9 @@ export default function Dashboard() {
       {/* Recent Complaints */}
       <section className="dashboard__section">
         <div className="dashboard__section-header">
-          <h2>Recent Complaints</h2>
+          <h2>{t('recent_complaints')}</h2>
           <button className="btn btn-ghost btn-sm" onClick={() => navigate('/complaints')}>
-            View All <i className="fas fa-arrow-right" />
+            {t('view_all')} <i className="fas fa-arrow-right" />
           </button>
         </div>
         <div className="dashboard__complaints-list">
@@ -120,8 +125,8 @@ export default function Dashboard() {
             <i className="fas fa-shield-halved" />
           </div>
           <div className="dashboard__transparency-text">
-            <h3>Transparency Portal</h3>
-            <p>View contractor details, budgets, and resolution data for all civic complaints</p>
+            <h3>{t('transparency_portal')}</h3>
+            <p>{t('transparency_desc')}</p>
           </div>
           <i className="fas fa-chevron-right dashboard__transparency-arrow" />
         </div>

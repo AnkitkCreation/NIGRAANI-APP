@@ -2,12 +2,11 @@ import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useComplaintStore from '../store/complaintStore';
 import useAuthStore from '../store/authStore';
+import useTranslation from '../hooks/useTranslation';
 import { CATEGORIES } from '../data/mockData';
 import StepIndicator from '../components/StepIndicator';
 import SeverityBadge from '../components/SeverityBadge';
 import './ReportIssue.css';
-
-const STEPS = ['Evidence', 'Details', 'Review'];
 
 function classifySeverity(title, description) {
   const text = `${title} ${description}`.toLowerCase();
@@ -25,7 +24,13 @@ export default function ReportIssue() {
   const location = useLocation();
   const { user } = useAuthStore();
   const addComplaint = useComplaintStore(s => s.addComplaint);
+  const { t } = useTranslation();
   const fileInputRef = useRef(null);
+
+  const STEPS = [t('step_confirm'), t('step_details'), t('step_confirm')]; // Simplified for now but translating keys
+  // Actually STEPS in translation file are step_category, step_details, step_location, step_confirm
+  // Let's use more accurate ones for this UI
+  const reportSteps = [t('step_category'), t('step_details'), t('step_confirm')];
 
   const [step, setStep] = useState(1);
   const [photos, setPhotos] = useState([]);
@@ -81,21 +86,21 @@ export default function ReportIssue() {
         <div className="report-success__icon">
           <i className="fas fa-circle-check" />
         </div>
-        <h2>Report Submitted!</h2>
-        <p>Your complaint has been registered successfully</p>
+        <h2>{t('report_success')}</h2>
+        <p>{t('report_desc')}</p>
         <div className="report-success__id-card">
-          <span className="text-label">Complaint ID</span>
+          <span className="text-label">{t('complaint_id')}</span>
           <span className="report-success__id">{submittedId}</span>
         </div>
         <div className="report-success__actions">
           <button className="btn btn-primary btn-full" onClick={() => navigate(`/complaint/${submittedId}`)}>
-            <i className="fas fa-eye" /> Track Your Complaint
+            <i className="fas fa-eye" /> {t('track_complaint')}
           </button>
           <button className="btn btn-outline btn-full" onClick={() => { setStep(1); setPhotos([]); setPhotoPreview([]); setTitle(''); setDescription(''); setCategory(''); setConfirmed(false); }}>
-            <i className="fas fa-plus" /> Report Another
+            <i className="fas fa-plus" /> {t('report_another')}
           </button>
           <button className="btn btn-ghost btn-full" onClick={() => navigate('/home')}>
-            Go to Home
+            {t('go_home')}
           </button>
         </div>
       </div>
@@ -104,14 +109,14 @@ export default function ReportIssue() {
 
   return (
     <div className="report-issue">
-      <StepIndicator steps={STEPS} currentStep={step} />
+      <StepIndicator steps={reportSteps} currentStep={step} />
 
       {/* Step 1: Evidence */}
       {step === 1 && (
         <div className="report-issue__step animate-fade-in">
           <section className="report-issue__photos">
-            <h3>Capture Evidence</h3>
-            <p className="text-caption">Take a clear photo of the issue (max 4 photos)</p>
+            <h3>{t('capture_evidence')}</h3>
+            <p className="text-caption">{t('clear_photo_hint')}</p>
 
             <div className="report-issue__photo-grid">
               {photoPreview.map((src, i) => (
@@ -125,7 +130,7 @@ export default function ReportIssue() {
               {photos.length < 4 && (
                 <button className="report-issue__photo-add" onClick={() => fileInputRef.current?.click()}>
                   <i className="fas fa-camera" />
-                  <span>Add Photo</span>
+                  <span>{t('add_photo')}</span>
                 </button>
               )}
             </div>
@@ -141,7 +146,7 @@ export default function ReportIssue() {
           </section>
 
           <section className="report-issue__gps">
-            <h3>Location Detected</h3>
+            <h3>{t('location_detected')}</h3>
             <div className="report-issue__gps-card">
               <div className="report-issue__gps-icon">
                 <i className="fas fa-location-crosshairs" />
@@ -163,14 +168,14 @@ export default function ReportIssue() {
             onClick={() => setStep(2)}
             disabled={photos.length === 0}
           >
-            Continue <i className="fas fa-arrow-right" />
+            {t('next')} <i className="fas fa-arrow-right" />
           </button>
           <p className="report-issue__hint">
             <i className="fas fa-info-circle" /> You can add a photo or proceed without one for demo
           </p>
           {photos.length === 0 && (
             <button className="btn btn-ghost btn-full" onClick={() => setStep(2)}>
-              Skip photo (demo)
+              {t('skip_photo')}
             </button>
           )}
         </div>
@@ -180,7 +185,7 @@ export default function ReportIssue() {
       {step === 2 && (
         <div className="report-issue__step animate-fade-in">
           <section>
-            <h3>Category</h3>
+            <h3>{t('step_category')}</h3>
             <div className="report-issue__category-chips">
               {CATEGORIES.map(cat => (
                 <button
@@ -190,18 +195,18 @@ export default function ReportIssue() {
                   style={category === cat.key ? { background: cat.color, color: 'white', borderColor: cat.color } : {}}
                 >
                   <i className={`fas ${cat.icon}`} />
-                  {cat.label}
+                  {t(`cat_${cat.key}`) || cat.label}
                 </button>
               ))}
             </div>
           </section>
 
           <div className="form-group">
-            <label className="form-label">Issue Title</label>
+            <label className="form-label">{t('issue_title')}</label>
             <input
               className="form-input"
               type="text"
-              placeholder="Brief title (e.g., Large pothole on main road)"
+              placeholder={t('title_placeholder')}
               value={title}
               onChange={e => setTitle(e.target.value.slice(0, 80))}
               maxLength={80}
@@ -210,10 +215,10 @@ export default function ReportIssue() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Description</label>
+            <label className="form-label">{t('description')}</label>
             <textarea
               className="form-input form-textarea"
-              placeholder="Describe the issue in detail — size, impact, how long it's been there..."
+              placeholder={t('desc_placeholder')}
               value={description}
               onChange={e => setDescription(e.target.value.slice(0, 500))}
               maxLength={500}
@@ -222,11 +227,11 @@ export default function ReportIssue() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Landmark (Optional)</label>
+            <label className="form-label">{t('landmark')} ({t('cat_other')})</label>
             <input
               className="form-input"
               type="text"
-              placeholder="Nearby landmark for easier identification"
+              placeholder={t('landmark_placeholder')}
               value={landmark}
               onChange={e => setLandmark(e.target.value)}
             />
@@ -234,7 +239,7 @@ export default function ReportIssue() {
 
           <div className="report-issue__nav-buttons">
             <button className="btn btn-outline" onClick={() => setStep(1)}>
-              <i className="fas fa-arrow-left" /> Back
+              <i className="fas fa-arrow-left" /> {t('previous')}
             </button>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
               <button
@@ -243,11 +248,11 @@ export default function ReportIssue() {
                 disabled={!category || !title || description.length < 3}
                 style={{ width: '100%' }}
               >
-                Review <i className="fas fa-arrow-right" />
+                {t('next')} <i className="fas fa-arrow-right" />
               </button>
               {(!category || !title || description.length < 3) && (
                 <span className="text-caption" style={{ color: 'var(--accent)', marginTop: 4, textAlign: 'center', fontSize: 10 }}>
-                  {!category ? 'Select category' : !title ? 'Enter title' : 'Description too short'}
+                  {!category ? t('step_category') : !title ? 'Enter title' : 'Description too short'}
                 </span>
               )}
             </div>
@@ -264,10 +269,10 @@ export default function ReportIssue() {
             )}
             <div className="report-issue__review-details">
               <div className="report-issue__review-row">
-                <span className="text-label">Category</span>
+                <span className="text-label">{t('step_category')}</span>
                 <span className="report-issue__chip report-issue__chip--active" style={{ background: CATEGORIES.find(c => c.key === category)?.color, color: 'white', borderColor: 'transparent', fontSize: 11 }}>
                   <i className={`fas ${CATEGORIES.find(c => c.key === category)?.icon}`} />
-                  {CATEGORIES.find(c => c.key === category)?.label}
+                  {t(`cat_${category}`) || CATEGORIES.find(c => c.key === category)?.label}
                 </span>
               </div>
               <div className="report-issue__review-row">
@@ -291,12 +296,12 @@ export default function ReportIssue() {
 
           <label className="report-issue__confirm">
             <input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} />
-            <span>I confirm this is a genuine civic issue</span>
+            <span>{t('confirm_genuine')}</span>
           </label>
 
           <div className="report-issue__nav-buttons">
             <button className="btn btn-outline" onClick={() => setStep(2)}>
-              <i className="fas fa-arrow-left" /> Back
+              <i className="fas fa-arrow-left" /> {t('previous')}
             </button>
             <button
               className="btn btn-accent"
@@ -304,7 +309,7 @@ export default function ReportIssue() {
               disabled={!confirmed}
               style={{ flex: 1 }}
             >
-              <i className="fas fa-paper-plane" /> Submit Report
+              <i className="fas fa-paper-plane" /> {t('submit')}
             </button>
           </div>
         </div>

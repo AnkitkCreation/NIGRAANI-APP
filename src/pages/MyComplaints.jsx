@@ -2,23 +2,26 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import useComplaintStore from '../store/complaintStore';
 import useAuthStore from '../store/authStore';
+import useTranslation from '../hooks/useTranslation';
 import ComplaintCard from '../components/ComplaintCard';
 import './MyComplaints.css';
-
-const TABS = [
-  { key: 'all', label: 'All' },
-  { key: 'pending', label: 'Pending' },
-  { key: 'in_progress', label: 'In Progress' },
-  { key: 'resolved', label: 'Resolved' },
-  { key: 'rejected', label: 'Rejected' },
-];
 
 export default function MyComplaints() {
   const location = useLocation();
   const { user } = useAuthStore();
   const complaints = useComplaintStore(s => s.complaints);
+  const { t } = useTranslation();
+  
   const [activeTab, setActiveTab] = useState(location.state?.status || 'all');
   const [search, setSearch] = useState('');
+
+  const TABS = [
+    { key: 'all', label: t('all') },
+    { key: 'pending', label: t('status_pending') },
+    { key: 'in_progress', label: t('status_in_progress') },
+    { key: 'resolved', label: t('status_resolved') },
+    { key: 'rejected', label: t('status_rejected') },
+  ];
 
   useEffect(() => {
     if (location.state?.status) {
@@ -47,7 +50,7 @@ export default function MyComplaints() {
         <i className="fas fa-search" />
         <input
           type="text"
-          placeholder="Search by title or complaint ID..."
+          placeholder={t('search_placeholder')}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -77,9 +80,9 @@ export default function MyComplaints() {
         {filtered.length === 0 ? (
           <div className="my-complaints__empty">
             <i className="fas fa-clipboard" />
-            <h3>No complaints found</h3>
+            <h3>{t('no_complaints')}</h3>
             <p>
-              {search ? 'Try a different search term' : `You don't have any ${activeTab === 'all' ? '' : activeTab.replace('_', ' ')} complaints`}
+              {search ? t('try_different') : t('no_complaints_type').replace('{type}', activeTab === 'all' ? '' : t(`status_${activeTab}`))}
             </p>
           </div>
         ) : (

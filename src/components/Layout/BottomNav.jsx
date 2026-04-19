@@ -1,19 +1,21 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore';
+import useTranslation from '../../hooks/useTranslation';
 import './BottomNav.css';
-
-const tabs = [
-  { key: 'home', label: 'Home', icon: 'fa-home', path: '/home' },
-  { key: 'map', label: 'Map', icon: 'fa-map-marked-alt', path: '/map' },
-  { key: 'report', label: 'Report', icon: 'fa-plus', path: '/report', center: true },
-  { key: 'complaints', label: 'My Issues', icon: 'fa-clipboard-list', path: '/complaints' },
-  { key: 'profile', label: 'Profile', icon: 'fa-user-circle', path: '/profile' },
-];
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const setActiveTab = useAppStore(s => s.setActiveTab);
+  const { t } = useTranslation();
+
+  const tabs = [
+    { key: 'home', label: t('nav_home'), icon: 'fa-house', path: '/home' },
+    { key: 'map', label: t('nav_map'), icon: 'fa-map-location-dot', path: '/map' },
+    { key: 'report', label: t('nav_report'), icon: 'fa-plus', path: '/report', center: true },
+    { key: 'complaints', label: t('nav_issues'), icon: 'fa-list-check', path: '/complaints' },
+    { key: 'profile', label: t('nav_profile'), icon: 'fa-user', path: '/profile' },
+  ];
 
   const hiddenPaths = ['/', '/splash', '/onboarding', '/auth'];
   if (hiddenPaths.some(p => location.pathname === p)) return null;
