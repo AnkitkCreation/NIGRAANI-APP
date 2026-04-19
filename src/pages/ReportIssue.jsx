@@ -42,8 +42,59 @@ export default function ReportIssue() {
   const [confirmed, setConfirmed] = useState(false);
   const [submittedId, setSubmittedId] = useState(null);
 
-  // Simulated GPS
-  const gpsLocation = { lat: 18.5082, lng: 73.8300, address: 'Near Nalstop, Karve Road, Pune 411004' };
+  // Real Geolocation
+  const [gpsLocation, setGpsLocation] = useState({ lat: null, lng: null, address: '', ward: '' });
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [locationError, setLocationError] = useState(null);
+
+  const detectLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation not supported');
+      return;
+    }
+
+    setIsDetecting(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setGpsLocation(prev => ({ ...prev, lat: latitude, lng: longitude }));
+        
+        try {
+          // Reverse Geocoding using OpenStreetMap (Nominatim)
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+          );
+          const data = await response.json();
+          const address = data.display_name;
+          const suburb = data.address.suburb || data.address.neighbourhood || data.address.city_district || 'Pune';
+          
+          setGpsLocation({
+            lat: latitude,
+            lng: longitude,
+            address: address,
+            ward: `Ward — ${suburb}`
+          });
+        } catch (err) {
+          console.error('Geocoding error:', err);
+          setGpsLocation(prev => ({ ...prev, address: 'Location detected, address lookup failed' }));
+        } finally {
+          setIsDetecting(false);
+        }
+      },
+      (err) => {
+        setIsDetecting(false);
+        setLocationError('Permission denied or location unavailable');
+        console.error(err);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
+  useState(() => {
+    detectLocation();
+  }, []);
 
   const handlePhotoCapture = (e) => {
     const files = Array.from(e.target.files);
@@ -71,7 +122,7 @@ export default function ReportIssue() {
       photos: photoPreview.length > 0 ? photoPreview : ['https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400&h=300&fit=crop'],
       location: { type: 'Point', coordinates: [gpsLocation.lng, gpsLocation.lat] },
       address: gpsLocation.address,
-      ward: 'Ward 14 — Deccan',
+      ward: gpsLocation.ward || 'Ward 14 — Deccan',
       severity,
       landmark,
     }, user?.id);
@@ -147,19 +198,32 @@ export default function ReportIssue() {
 
           <section className="report-issue__gps">
             <h3>{t('location_detected')}</h3>
-            <div className="report-issue__gps-card">
-              <div className="report-issue__gps-icon">
+            <div className={`report-issue__gps-card ${isDetecting ? 'report-issue__gps-card--detecting' : ''}`}>
+              <div className={`report-issue__gps-icon ${isDetecting ? 'animate-pulse' : ''}`}>
                 <i className="fas fa-location-crosshairs" />
               </div>
               <div className="report-issue__gps-info">
-                <span className="report-issue__gps-coords">
-                  {gpsLocation.lat.toFixed(4)}, {gpsLocation.lng.toFixed(4)}
-                </span>
-                <span className="report-issue__gps-address">{gpsLocation.address}</span>
+                {locationError ? (
+                  <span className="text-caption" style={{ color: 'var(--accent)' }}>{locationError}</span>
+                ) : (
+                  <>
+                    <span className="report-issue__gps-coords">
+                      {gpsLocation.lat ? `${gpsLocation.lat.toFixed(4)}, ${gpsLocation.lng.toFixed(4)}` : 'Scanning...'}
+                    </span>
+                    <span className="report-issue__gps-address">
+                      {isDetecting ? 'Fetching street address...' : gpsLocation.address || 'Address not found'}
+                    </span>
+                  </>
+                )}
               </div>
-              <span className="report-issue__gps-accuracy">
-                <i className="fas fa-signal" /> ±8m
-              </span>
+              <button 
+                className="btn btn-ghost btn-sm" 
+                onClick={detectLocation}
+                disabled={isDetecting}
+                title="Refresh Location"
+              >
+                <i className={`fas fa-sync-alt ${isDetecting ? 'fa-spin' : ''}`} />
+              </button>
             </div>
           </section>
 
