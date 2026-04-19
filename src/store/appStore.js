@@ -26,6 +26,14 @@ const useAppStore = create((set, get) => ({
       )
     }));
   },
+
+  markAsRead: (notificationId) => {
+    set((state) => ({
+      notifications: state.notifications.map(n => 
+        n.id === notificationId ? { ...n, read: true } : n
+      )
+    }));
+  },
 }));
 
 export default useAppStore;

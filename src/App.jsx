@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import EditProfile from './pages/EditProfile';
 import SettingsDetail from './pages/SettingsDetail';
+import Transparency from './pages/Transparency';
 import './App.css';
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/complaint/:id" element={<ComplaintDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/transparency" element={<Transparency />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/settings/:type" element={<SettingsDetail />} />
             <Route path="*" element={<Navigate to="/" replace />} />

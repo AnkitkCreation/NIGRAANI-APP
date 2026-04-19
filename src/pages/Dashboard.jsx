@@ -120,7 +120,7 @@ export default function Dashboard() {
 
       {/* Transparency Highlight */}
       <section className="dashboard__section">
-        <div className="dashboard__transparency-card" onClick={() => navigate('/complaints')}>
+        <div className="dashboard__transparency-card" onClick={() => navigate('/transparency')}>
           <div className="dashboard__transparency-icon">
             <i className="fas fa-shield-halved" />
           </div>
