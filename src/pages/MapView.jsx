@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import useComplaintStore from '../store/complaintStore';
-import { getCategoryInfo, getSeverityInfo } from '../data/mockData';
 import SeverityBadge from '../components/SeverityBadge';
 import './MapView.css';
 

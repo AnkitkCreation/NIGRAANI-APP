@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import useComplaintStore from '../store/complaintStore';
 import useAuthStore from '../store/authStore';
 import useTranslation from '../hooks/useTranslation';
@@ -7,12 +6,11 @@ import ComplaintCard from '../components/ComplaintCard';
 import './MyComplaints.css';
 
 export default function MyComplaints() {
-  const location = useLocation();
   const { user } = useAuthStore();
   const complaints = useComplaintStore(s => s.complaints);
   const { t } = useTranslation();
   
-  const [activeTab, setActiveTab] = useState(location.state?.status || 'all');
+  const [activeTab, setActiveTab] = useState('all');
   const [search, setSearch] = useState('');
 
   const TABS = [
@@ -22,12 +20,6 @@ export default function MyComplaints() {
     { key: 'resolved', label: t('status_resolved') },
     { key: 'rejected', label: t('status_rejected') },
   ];
-
-  useEffect(() => {
-    if (location.state?.status) {
-      setActiveTab(location.state.status);
-    }
-  }, [location.state]);
 
   const userComplaints = complaints.filter(c => c.userId === user?.id);
 

@@ -1,0 +1,24 @@
+{
+  "name": "Nigraani — Civic Oversight Platform",
+  "short_name": "Nigraani",
+  "description": "Report civic issues, track resolutions, and hold authorities accountable",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A6E6E",
+  "theme_color": "#0A6E6E",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

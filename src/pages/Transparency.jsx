@@ -23,10 +23,10 @@ export default function Transparency() {
   }, []);
 
   const departmentStats = useMemo(() => {
-    return CATEGORIES.slice(0, 4).map(cat => ({
+    return CATEGORIES.slice(0, 4).map((cat, idx) => ({
       ...cat,
-      efficiency: 85 + Math.floor(Math.random() * 12), // Mock efficiency
-      activeCount: Math.floor(Math.random() * 50) + 10
+      efficiency: [92, 87, 78, 85][idx],
+      activeCount: [42, 38, 25, 31][idx]
     }));
   }, []);
 
